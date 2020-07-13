@@ -1,0 +1,117 @@
+CFLAGS 		=
+# suppress all warnings for gcc and compatible compilers with -w
+# makes emacs output easier to read 
+CPPFLAGS        =  -w -pedantic 
+
+#PETSC_ARCH 	= linux-gcc-g++-debug
+PETSC_ARCH 	= linux-gcc-g++
+BOPT  		= 
+# This is for the nynode cluster
+#PETSC_DIR 	=/raid/users/gokhale/install/petsc-3.1-p4
+#TAO_DIR	=/raid/users/gokhale/install/tao-1.10.1
+# this is for gokhale_fc9 - old petsc+tao
+#PETSC_DIR 	=/opt/petsc/petsc-3.1-p8
+#TAO_DIR	=/opt/tao/tao-1.10.1-p2
+PETSC_DIR 	=/opt/petsc/petsc-3.2-p7
+TAO_DIR  	=/opt/tao/tao-2.0-p4
+SLEPC_DIR	=/opt/SlepC/slepc-3.2-p5
+
+FPPFLAGS 	= 
+SRCDIR  	= ${HYSER_DIR}/src
+LIBDIR  	= ${HYSER_DIR}/lib
+ELEMDIR         = ${HYSER_DIR}/lib/elemlib
+INTEDIR         = ${HYSER_DIR}/lib/integlib
+SHAPDIR         = ${HYSER_DIR}/lib/shapelib
+UTILDIR	        = ${HYSER_DIR}/utils
+DATDIR          = ${HYSER_DIR}/lib/datastruct
+MESHDIR	 	= ${HYSER_DIR}/lib/meshlib
+EQNDIR          = ${HYSER_DIR}/lib/eqnlib
+CONSDIR 	= ${HYSER_DIR}/lib/conslib
+BINDIR  	= bin
+
+
+FORWARD	 	= forward.o 
+INVERSE 	= inverse.o calc_dual.o gradientcallbackfortao.o fdgrad.o calcfuncgrad.o builddualrhs.o calc_normmeas.o
+OBJECTS 	= buildtan.o buildres.o buildenh.o localizer.o getelemref.o assembletan.o assembleres.o calc_forward.o assembleenh.o homogenize.o
+ELEMOBJ         = ${ELEMDIR}/linelas1d.o ${ELEMDIR}/linelas2d.o ${ELEMDIR}/linelas2d9.o ${ELEMDIR}/linelasincompps.o ${ELEMDIR}/linelas2dwilsontaylorinc.o ${ELEMDIR}/linelasreduced2d.o ${ELEMDIR}/linelastrac2d.o ${ELEMDIR}/linelaspiltnertaylorijnme992d.o ${ELEMDIR}/linelas3d.o ${ELEMDIR}/linelasreduced3d.o ${ELEMDIR}/nonlinelas1d.o ${ELEMDIR}/nonlinelas2d.o ${ELEMDIR}/nonlinelas2d9.o ${ELEMDIR}/nonlinelas2daijkl.o ${ELEMDIR}/nonlinelaspiltnertaylorijnme992d.o  ${ELEMDIR}/nonlinelasarmeroglaser2d.o ${ELEMDIR}/nonlinelaswriggersreese2d.o  ${ELEMDIR}/nonlinelastrac2d.o ${ELEMDIR}/elem_base.o  ${ELEMDIR}/nonlinheat2d.o ${ELEMDIR}/nonlinelas3d.o
+INTEOBJ         = ${INTEDIR}/gauss1d.o ${INTEDIR}/gauss2d.o ${INTEDIR}/gauss3d.o
+UTILOBJ         = ${UTILDIR}/csr.o
+SHAPOBJ         = ${SHAPDIR}/shape1d.o ${SHAPDIR}/shape2d.o ${SHAPDIR}/shape2d9.o ${SHAPDIR}/shape3d.o ${SHAPDIR}/checkjacobiandet.o
+MESHOBJ 	= ${MESHDIR}/mesh.o
+EQNOBJ 	        = ${EQNDIR}/equation_system.o ${EQNDIR}/petsc_system.o ${EQNDIR}/slepc_system.o
+CONSOBJ  	= ${CONSDIR}/elas1d.o ${CONSDIR}/elas2d.o ${CONSDIR}/elas3d.o 
+DATOBJ 	        = ${DATDIR}/shapestruct.o
+NP		= 2
+
+# This includes TAO options, and PETSc options
+# Compiling rules come built in
+# this is for the old tao
+#include ${TAO_DIR}/bmake/tao_common
+# this is for new tao
+#include ${SLEPC_DIR}/conf/slepc_common
+include ${TAO_DIR}/conf/tao_base
+#include ${PETSC_DIR}/bmake/common/base
+
+# define some SLEPC Stuff 
+#include ${SLEPC_DIR}/conf/slepc_variables
+SLEPC_LIB_DIR	   = ${SLEPC_DIR}/${PETSC_ARCH}/lib
+SLEPC_INCLUDE      = -I${SLEPC_DIR} -I${SLEPC_DIR}/${PETSC_ARCH}/include -I${SLEPC_DIR}/include
+SLEPC_EXTERNAL_LIB = ${ARPACK_LIB} ${BLZPACK_LIB} ${TRLAN_LIB} ${PRIMME_LIB} ${BLOPEX_LIB}
+SLEPC_LIB          = ${CC_LINKER_SLFLAG}${SLEPC_LIB_DIR} -L${SLEPC_LIB_DIR} -lslepc 
+SLEPC_OPT          = -fPIC
+
+
+
+
+all:    ${FORWARD} ${INVERSE} ${OBJECTS} tao_chkopts
+	@cd ${UTILDIR};${MAKE} clean;${MAKE} allutil;cd ${SRCDIR}
+	@cd ${LIBDIR};${MAKE} alllib;cd ${SRCDIR}
+# 	create the forward code and the inverse code 
+# 	the inverse code needs the tao libraries 
+	-${CLINKER} ${SLEPC_OPT}  -o forward ${FORWARD} ${OBJECTS} ${CPPFLAGS}$ ${PETSC_SNES_LIB} ${SLEPC_LIB}  ../lib/datastruct/shapestruct.o ../lib/elemlib/libelem.a ${INTEOBJ} ${SHAPOBJ} ${UTILOBJ} ${MESHOBJ} ${EQNOBJ} ${CONSOBJ}
+	-${CLINKER}  ${SLEPC_OPT} -o inverse	${INVERSE} ${OBJECTS} ${CPPFLAGS}$ ${TAO_LIB} ${PETSC_SNES_LIB} ${SLEPC_LIB}  ../lib/datastruct/shapestruct.o ${ELEMOBJ} ${INTEOBJ} ${SHAPOBJ} ${UTILOBJ} ${MESHOBJ} ${EQNOBJ} ${CONSOBJ}
+
+
+forward:    ${FORWARD}  ${OBJECTS} tao_chkopts
+	@cd ${UTILDIR};${MAKE} clean;${MAKE} allutil;cd ${SRCDIR}
+	@cd ${LIBDIR}; ${MAKE} clean;${MAKE} alllib;cd ${SRCDIR}
+# 	create the forward code and the inverse code 
+# 	the inverse code needs the tao libraries 
+	-${CLINKER}  -o forward ${FORWARD} ${OBJECTS} ${CPPFLAGS}$ ${PETSC_SNES_LIB} ${SLEPC_LIB} ../lib/datastruct/shapestruct.o ../lib/elemlib/libelem.a ${INTEOBJ} ${SHAPOBJ} ${UTILOBJ} ${MESHOBJ} ${EQNOBJ} ${CONSOBJ}
+
+
+forward.o: forward.cpp
+	${CLINKER} -c ${SLEPC_OPT} ${CPPFLAGS} ${TAO_INCLUDE} ${SLEPC_INCLUDE} ${PETSC_CC_INCLUDES} forward.cpp
+
+calc_forward.o: calc_forward.cpp
+	${CLINKER} -c ${SLEPC_OPT} ${CPPFLAGS} ${TAO_INCLUDE} ${SLEPC_INCLUDE} ${PETSC_CC_INCLUDES} calc_forward.cpp
+
+run:main
+	mpirun -np ${NP} ./main
+
+#make the element library 
+elemlib:${ELEMDIR}/Makefile
+	@cd ${ELEMDIR};	${MAKE} elem_base;cd ${HYSER_DIR}
+
+#make the integration library
+integlib:${INTEDIR}/Makefile
+	@cd ${INTEDIR};${MAKE} allint;cd ${HYSER_DIR}
+
+#make the shape library
+shaplib:${SHAPDIR}/Makefile
+	@cd ${SHAPDIR};${MAKE} allshp;cd ${HYSER_DIR}
+
+superclean:
+#	rm - rf forward inverse
+	@echo ${TEMPDIR}
+	@echo ${TEMPDIR2}
+	@echo ${HYSER_DIR}
+	@cd ${UTILDIR}; ${MAKE} clean; cd ${SRCDIR}
+	@cd ${LIBDIR};  ${MAKE} clean; cd ${SRCDIR}
+	rm -rf *.o *.exe *~* forward inverse
+# DO NOT DELETE
+
+
+tar:
+	@cd ${SRCDIR};cd ..; rm hyserIII.tar.gz; tar -czvf hyserIII.tar.gz docs headers/ lib/ src/ test/ utils/ ;cd ${SRCDIR}
+

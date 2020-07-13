@@ -1,0 +1,73 @@
+CFLAGS 		=
+# suppress all warnings for gcc and compatible compilers with -w
+# makes emacs output easier to read 
+CPPFLAGS        = -w 
+#PETSC_ARCH 	= linux-gnu-c++-nompi-optimized
+PETSC_ARCH      = linux-gnu-nompi-c++-optimized
+#PETSC_ARCH 	= linux-gnu-nompi-debugging
+
+BOPT  		= 
+PETSC_DIR 	= /opt/petsc/petsc-2.3.0
+TAO_DIR		= /opt/tao/tao-1.8
+FPPFLAGS 	= 
+SRCDIR  	= ${HYSER_DIR}/src
+LIBDIR  	= ${HYSER_DIR}/lib
+ELEMDIR         = ${HYSER_DIR}/lib/elemlib
+INTEDIR         = ${HYSER_DIR}/lib/integlib
+SHAPDIR         = ${HYSER_DIR}/lib/shapelib
+UTILDIR	        = ${HYSER_DIR}/utils
+DATDIR          = ${HYSER_DIR}/lib/datastruct
+MESHDIR	 	= ${HYSER_DIR}/lib/meshlib
+EQNDIR          = ${HYSER_DIR}/lib/eqnlib
+CONSDIR 	= ${HYSER_DIR}/lib/conslib
+BINDIR  	= bin
+
+
+FORWARD	 	= forward.o
+INVERSE 	= inverse.o calc_dual.o gradientcallbackfortao.o fdgrad.o calcfuncgrad.o builddualrhs.o
+OBJECTS 	= buildtan.o buildres.o localizer.o getelemref.o assembletan.o assembleres.o calc_forward.o 
+ELEMOBJ         = ${ELEMDIR}/linelas1d.o ${ELEMDIR}/linelas2d.o ${ELEMDIR}/linelas3d.o ${ELEMDIR}/nonlinelas1d.o ${ELEMDIR}/nonlinelas2d.o ${ELEMDIR}/elem_base.o  ${ELEMDIR}/nonlinheat2d.o ${ELEMDIR}/nonlinelas3d.o
+INTEOBJ         = ${INTEDIR}/gauss1d.o ${INTEDIR}/gauss2d.o ${INTEDIR}/gauss3d.o
+UTILOBJ         = ${UTILDIR}/csr.o
+SHAPOBJ         = ${SHAPDIR}/shape1d.o ${SHAPDIR}/shape2d.o ${SHAPDIR}/shape3d.o ${SHAPDIR}/checkjacobiandet.o
+MESHOBJ 	= ${MESHDIR}/mesh.o
+EQNOBJ 	        = ${EQNDIR}/equation_system.o ${EQNDIR}/petsc_system.o
+CONSOBJ  	= ${CONSDIR}/elas1d.o ${CONSDIR}/elas2d.o ${CONSDIR}/elas3d.o 
+DATOBJ 	        = ${DATDIR}/shapestruct.o
+NP		= 2
+
+# This includes TAO options, and PETSc options
+# Compiling rules come built in
+include ${TAO_DIR}/bmake/tao_common
+#include ${PETSC_DIR}/bmake/common/base
+
+all:    ${FORWARD} ${INVERSE} ${OBJECTS} tao_chkopts
+	@cd ${UTILDIR};${MAKE} clean;${MAKE} allutil;cd ${SRCDIR}
+	@cd ${LIBDIR};${MAKE} alllib;cd ${SRCDIR}
+# 	create the forward code and the inverse code 
+# 	the inverse code needs the tao libraries 
+	-${CLINKER}  -o forward ${FORWARD} ${OBJECTS} ${CPPFLAGS}$ ${PETSC_SNES_LIB} ../lib/datastruct/shapestruct.o ${ELEMOBJ} ${INTEOBJ} ${SHAPOBJ} ${UTILOBJ} ${MESHOBJ} ${EQNOBJ} ${CONSOBJ}
+	-${CLINKER}  -o inverse	${INVERSE} ${OBJECTS} ${CPPFLAGS}$ ${TAO_LIB} ${PETSC_SNES_LIB} ../lib/datastruct/shapestruct.o ${ELEMOBJ} ${INTEOBJ} ${SHAPOBJ} ${UTILOBJ} ${MESHOBJ} ${EQNOBJ} ${CONSOBJ}
+
+run:main
+	mpirun -np ${NP} ./main
+
+
+
+
+
+#make the element library 
+elemlib:${ELEMDIR}/Makefile
+	@cd ${ELEMDIR};	${MAKE} elem_base;cd ${HYSER_DIR}
+
+#make the integration library
+integlib:${INTEDIR}/Makefile
+	@cd ${INTEDIR};${MAKE} allint;cd ${HYSER_DIR}
+
+#make the shape library
+shaplib:${SHAPDIR}/Makefile
+	@cd ${SHAPDIR};${MAKE} allshp;cd ${HYSER_DIR}
+
+clean:
+	rm -rf *.o *.exe *~* forward inverse
+# DO NOT DELETE

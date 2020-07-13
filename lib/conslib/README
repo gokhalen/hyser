@@ -1,0 +1,13 @@
+1.1 What is conslib?
+===========================
+
+1.1 What is conslib?
+	A library for handling different constitutive equation. Given a constitutive equation number, this library will return a pointer to the first, second Piola-Kirchhoff, C_{IJKL}. The functions in this library are usually called by theelement library. Finally, it should also be able to evaluate the element level material gradient. It also has functions to dump out the 
+
+1) Incremental (linearized) elastic modulus
+2) The C_{IJKL} and c_{ijkl}
+3) The Cauchy stress
+4) The First Piola-Kirchhoff
+5) The second Piola-Kirchhoff
+
+

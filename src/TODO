@@ -1,0 +1,23 @@
+This is a general list of things to do. 
+
+1) Calculate the regularization functional only once.  (DONE)
+2) Terminate newton iterations when the residual is small. (DONE)
+3) Clear up the localize last iteration part              
+4) Clear up localizer the hack in mesh.cpp were we build the CSR mapping. 
+  
+   --a lot of stuff can be cleared up if we split localizer into two functions
+
+    a) localizer geometry
+	
+	localizer geometry would loclize coordinates dofns, FEM arrays	
+
+    b) localizer fields 	
+   
+	localizer fields would loclize primal, dual, boundary data, matprops
+      
+    c) Write a function that prints a given two/three dimensional array to a given file. This can be used to clean up the printing of various arrays. 
+
+5) There should be a different number of load iterations for each deformation fields.
+6) Clean up Makefile
+7) Autoconf/ Scons system
+8) Use exceptions instead of assertions

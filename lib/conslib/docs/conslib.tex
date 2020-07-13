@@ -1,0 +1,41 @@
+\def\b#1{\mbox{\boldmath{$#1$}}}
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\begin{document}
+\title{Documentation for constitutive equation library routines}
+\author{Nachiket Gokhale gokhalen@bu.edu}
+\maketitle
+\
+\section{Introduction}
+The constitutive library routines have facilities for the following relations:
+
+\begin{enumerate}
+\item{Non-linear elasticity in 1d,2d,3d}
+\end{enumerate}
+
+For each of these routines a data structure is defined in {\textit{\b{conslib.h}}}, which must be passed along with the desired constitutive equation number to the routines (for example, \textit{\b{elas1d}}) to get the value of the stiffness at a particular state. 
+\section{Constitutive Equations in 2D}
+\subsection{Notation}
+Throughout this document we use the following notation:
+\begin{eqnarray}
+\b{F} &=& 1 + \nabla^{X}\b{U}(\b{X})\\
+J &=& det(\b{F})\\
+\b{C} &=& \b{F}^{T}\b{F}
+\end{eqnarray}
+\subsection{Law Number 1}
+This is found on page 223 of Elastoplasticity and Viscoplasticity the unauthorized notes, by Simo and Hughes.
+The strain energy function is 
+\begin{eqnarray}
+\mathcal{W} = \frac{\lambda}{4}(J^2 -1) - (\frac{\lambda}{2} + \mu)ln(J) + \frac{1}{2}\mu(tr(\b{C}) - 3)
+\end{eqnarray}
+The second-piola Kirchhoff is
+\begin{eqnarray}
+\b{S}  = \frac{\lambda}{2}(J^2-1)\b{C}^{-1} + \mu(\b{1} - \b{C}^{-1})
+\end{eqnarray} 
+The material stiffness is 
+\begin{eqnarray}
+C_{IJKL} = \frac{1}{2}(2\mu - \lambda(det(\b{C}) - 1))(C^{-1}_{IK}C^{-1}_{JL} + C^{-1}_{IL}C^{-1}_{JK}) + \lambda({det{\b{C}}})C^{-1}_{IJ}C^{-1}_{KL}
+\end{eqnarray}
+\end{document}

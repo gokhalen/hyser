@@ -1,0 +1,44 @@
+g++ -o forward.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" forward.cpp
+g++ -o inverse.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" inverse.cpp
+g++ -o calc_dual.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" calc_dual.cpp
+g++ -o gradientcallbackfortao.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" gradientcallbackfortao.cpp
+g++ -o fdgrad.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" fdgrad.cpp
+g++ -o calcfuncgrad.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" calcfuncgrad.cpp
+g++ -o builddualrhs.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" builddualrhs.cpp
+g++ -o calc_normmeas.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" calc_normmeas.cpp
+g++ -o buildtan.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" buildtan.cpp
+g++ -o buildres.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" buildres.cpp
+g++ -o buildenh.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" buildenh.cpp
+g++ -o localizer.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" localizer.cpp
+g++ -o getelemref.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" getelemref.cpp
+g++ -o assembletan.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" assembletan.cpp
+g++ -o assembleres.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" assembleres.cpp
+g++ -o calc_forward.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" calc_forward.cpp
+g++ -o assembleenh.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" assembleenh.cpp
+g++ -o homogenize.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" homogenize.cpp
+make[1]: Entering directory `/home/gokhale/HyserIII/utils'
+make[1]: Leaving directory `/home/gokhale/HyserIII/utils'
+make[1]: Entering directory `/home/gokhale/HyserIII/utils'
+g++ -o /home/gokhale/HyserIII/utils/csr.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" /home/gokhale/HyserIII/utils/csr.cpp
+make[1]: Leaving directory `/home/gokhale/HyserIII/utils'
+make[1]: Entering directory `/home/gokhale/HyserIII/lib'
+make[2]: Entering directory `/home/gokhale/HyserIII/lib/datastruct'
+make[2]: Leaving directory `/home/gokhale/HyserIII/lib/datastruct'
+make[2]: Entering directory `/home/gokhale/HyserIII/lib/datastruct'
+g++ -o /home/gokhale/HyserIII/lib/datastruct/shapestruct.o -c -Wall -Wwrite-strings -Wno-strict-aliasing -O -fPIC -I/opt/petsc-3.0.0-p12/linux-gcc-g++/include -I/opt/petsc-3.0.0-p12/include -I/opt/petsc-3.0.0-p12/include/mpiuni -I/opt/tao-1.10-p1 -I/opt/tao-1.10-p1/include -w -pedantic -D__SDIR__="" /home/gokhale/HyserIII/lib/datastruct/shapestruct.cpp
+make[2]: Leaving directory `/home/gokhale/HyserIII/lib/datastruct'
+make[2]: Entering directory `/home/gokhale/HyserIII/lib/elemlib'
+make[2]: Leaving directory `/home/gokhale/HyserIII/lib/elemlib'
+make[2]: Entering directory `/home/gokhale/HyserIII/lib/elemlib'
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelas1d.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelas2d.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelas2d9.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelasincompps.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelas2dwilsontaylorinc.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelasreduced2d.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelaspiltnertaylorijnme992d.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelas3d.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  linelastrac2d.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  nonlinelas1d.cpp elem_base.cpp
+g++ -Wall -Wwrite-strings -Wno-strict-aliasing -O  -c -w -pedantic  nonlinelas2d.cpp elem_base.cpp

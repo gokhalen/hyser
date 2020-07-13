@@ -1,0 +1,6 @@
+HYSER_DIR		=/home/gokhale/HyserIV
+SRCDIR=${HYSER_DIR}/src
+INVERSECPPAWK   = ${shell ls ${SRCDIR}/inverse.cpp | awk '{gsub(/\//,"\\\/"); print $1}' }
+FORWARDOBJ      = ${shell ls ${SRCDIR}/*.cpp | awk 'gsub(/${INVERSECPPAWK}/,"");{gsub(/.cpp/,".o"); print $1}'}
+test:
+	echo "INVERSECPPAWK is" ${INVERSECPPAWK} "FORWARDOBJ is" ${FORWARDOBJ}

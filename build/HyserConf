@@ -1,0 +1,97 @@
+HYSER_DIR		=/home/gokhale/HyserVII
+# suppress all warnings for gcc with -w  
+CFLAGS	        =
+CPPFLAGS        =  -w -pedantic 
+PETSC_ARCH 	= linux-gcc-gpp-mumps
+PETSC_DIR 	=/opt/petsc/petsc-git
+SLEPC_DIR       =/opt/SlepC/slepc-git
+# define some SLEPC Stuff 
+SLEPC_LIB_DIR	   = ${SLEPC_DIR}/${PETSC_ARCH}/lib
+SLEPC_INCLUDE      = -I${SLEPC_DIR} -I${SLEPC_DIR}/${PETSC_ARCH}/include -I${SLEPC_DIR}/include
+SLEPC_EXTERNAL_LIB = ${ARPACK_LIB} ${BLZPACK_LIB} ${TRLAN_LIB} ${PRIMME_LIB} ${BLOPEX_LIB}
+SLEPC_LIB          = ${CC_LINKER_SLFLAG}${SLEPC_LIB_DIR} -L${SLEPC_LIB_DIR} -lslepc 
+SLEPC_OPT          = -fPIC
+include    ${SLEPC_DIR}/conf/slepc_common
+# redefine implicit compilation rules
+.cpp.o:
+	${CLINKER} -c ${SLEPC_OPT} ${CPPFLAGS} ${SLEPC_INCLUDE} ${PETSC_CC_INCLUDES} -o $@ $<
+
+FPPFLAGS 	= 
+SRCDIR  	= ${HYSER_DIR}/src
+LIBDIR  	= ${HYSER_DIR}/lib
+ELEMDIR         = ${HYSER_DIR}/lib/elemlib
+INTEDIR         = ${HYSER_DIR}/lib/integlib
+SHAPDIR         = ${HYSER_DIR}/lib/shapelib
+UTILDIR	        = ${HYSER_DIR}/lib/utillib
+DATDIR          = ${HYSER_DIR}/lib/datastruct
+MESHDIR	 	= ${HYSER_DIR}/lib/meshlib
+EQNDIR          = ${HYSER_DIR}/lib/eqnlib
+CONSDIR 	= ${HYSER_DIR}/lib/conslib
+HEADERDIR       = ${HYSER_DIR}/headers
+BINDIR  	= bin
+
+# main source files
+REMOVEFORWARDAWK   = ${shell ls ${SRCDIR}/inverse.cpp | awk '{gsub(/\//,"\\\/"); print $1}' }
+REMOVEFORWARDAWK2  = ${shell ls ${SRCDIR}/gradientcallbackfortao.cpp | awk '{gsub(/\//,"\\\/"); print $1}' }
+
+FORWARDOBJ      = ${shell ls ${SRCDIR}/*.cpp | awk '{gsub(/${REMOVEFORWARDAWK}/,"");gsub(/${REMOVEFORWARDAWK2}/,"");gsub(/.cpp/,".o"); print $1 }'}
+FORWARDSRC  	= ${shell ls ${SRCDIR}/*.cpp  }
+FORWARDHDR      = ${shell ls ${SRCDIR}/*.hpp ${SRCDIR}/*.h}
+
+REMOVEINVERSEAWK   = ${shell ls ${SRCDIR}/forward.cpp | awk '{gsub(/\//,"\\\/"); print $1}' }
+INVERSEOBJ         = ${shell ls ${SRCDIR}/*.cpp | awk '{gsub(/${REMOVEINVERSEAWK}/,"");gsub(/.cpp/,".o"); print $1 }'}
+INVERSESRC         = ${shell ls ${SRCDIR}/*.cpp  }
+INVERSEHDR         = ${shell ls ${SRCDIR}/*.hpp ${SRCDIR}/*.h}
+
+
+# elem files 
+ELEMOBJ         = ${shell ls ${ELEMDIR}/*.cpp | awk '{gsub(/.cpp/,".o"); print $1 }'}
+ELEMSRC  	= ${shell ls ${ELEMDIR}/*.cpp  }
+ELEMHDR         = ${shell ls ${ELEMDIR}/*.hpp ${ELEMDIR}/*.h}
+ELEMLIB         = ${ELEMDIR}/libelem.a
+
+#integfiles
+INTEOBJ         = ${shell ls ${INTEDIR}/*.cpp | awk '{gsub(/.cpp/,".o"); print $1 }'}
+INTESRC  	= ${shell ls ${INTEDIR}/*.cpp  }
+INTEHDR         = ${shell ls ${INTEDIR}/*.hpp ${INTEDIR}/*.h}
+INTELIB         = ${INTEDIR}/libinteg.a
+
+#shapefiles
+SHAPOBJ         = ${shell ls ${SHAPDIR}/*.cpp | awk '{gsub(/.cpp/,".o"); print $1 }'}
+SHAPSRC  	= ${shell ls ${SHAPDIR}/*.cpp  }
+SHAPHDR         = ${shell ls ${SHAPDIR}/*.hpp ${SHAPDIR}/*.h}
+SHAPLIB 	= ${SHAPDIR}/libshape.a
+
+#utildir
+UTILOBJ         = ${shell ls ${UTILDIR}/*.cpp | awk '{gsub(/.cpp/,".o"); print $1 }'}
+UTILSRC  	= ${shell ls ${UTILDIR}/*.cpp ${UTILDIR}/*.hpp }
+UTILHDR         = ${shell ls ${UTILDIR}/*.hpp ${UTILDIR}/*.h}
+UTILLIB         = ${UTILDIR}/libutil.a
+
+#datdir
+DATOBJ		= ${shell ls ${DATDIR}/*.cpp | awk '{gsub(/.cpp/,".o"); print $1}'}
+DATSRC  	= ${shell ls ${DATDIR}/*.cpp  }
+DATHDR          = ${shell ls ${DATDIR}/*.hpp ${DATDIR}/*.h}
+DATLIB          = ${DATDIR}/libdat.a
+
+MESHOBJ		= ${shell ls ${MESHDIR}/*.cpp | awk '{gsub(/.cpp/,".o"); print $1}'}
+MESHSRC  	= ${shell ls ${MESHDIR}/*.cpp  }
+MESHHDR         = ${shell ls ${MESHDIR}/*.hpp ${MESHDIR}/*.h}
+MESHLIB         = ${MESHDIR}/libmesh.a
+
+EQNOBJ		= ${shell ls ${EQNDIR}/*.cpp | awk '{gsub(/.cpp/,".o"); print $1}'}
+EQNSRC  	= ${shell ls ${EQNDIR}/*.cpp  }
+EQNHDR          = ${shell ls ${EQNDIR}/*.hpp ${EQNDIR}/*.h}
+EQNLIB          = ${EQNDIR}/libeqn.a
+
+CONSOBJ		= ${shell ls ${CONSDIR}/*.cpp | awk '{gsub(/.cpp/,".o"); print $1}'}
+CONSSRC  	= ${shell ls ${CONSDIR}/*.cpp  }
+CONSHDR         = ${shell ls ${CONSDIR}/*.hpp ${CONSDIR}/*.h}
+CONSLIB         = ${CONSDIR}/libcons.a
+
+LIBSRC = ${ELEMSRC} ${INTESRC} ${SHAPSRC} ${DATSRC} ${MESHSRC} ${EQNSRC} ${CONSSRC} ${UTILSRC}
+LIBHDR = ${ELEMHDR} ${INTEHDR} ${SHAPHDR} ${DATHDR} ${MESHHDR} ${EQNHDR} ${CONSHDR} ${UTILHDR}
+
+HYSER_GLOBAL_HEADERS	=${shell ls ${HEADERDIR}/*.h}
+HYSER_GLOBAL_UTILS      =${shell ls ${UTILDIR}/*.cpp ${UTILDIR}/*.hpp}
+HYSER_COMMON_DEPS	=${HYSER_DIR}/src/HyserConf ${HYSER_GLOBAL_HEADERS} ${HYSER_GLOBAL_UTILS}
