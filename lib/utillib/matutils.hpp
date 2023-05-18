@@ -330,4 +330,101 @@ template <class XXX> void matmultbyscalar(int rows, int cols, XXX factor,XXX **m
 
 }
 
+template <class XX> void addtomat(double shift, int rows, int cols, XX **mat){
+
+  assert(rows>0); assert(cols>0);
+
+  for (int irow = 0; irow < rows ; irow++){
+    for (int icol = 0; icol < cols; icol++){
+      mat[irow][icol] +=shift; 
+    }
+  }
+  
+}
+
+template <class XX> double matnorm(int nrows, int ncols, XX **mat){
+  assert(nrows>0); assert(ncols>0);
+
+  double norm = 0.0;
+
+  for (int irow = 0; irow < nrows ; irow++){
+    for (int icol = 0; icol < ncols; icol++){
+      norm += mat[irow][icol]*mat[irow][icol];
+    }
+  }
+
+  norm = sqrt(norm);
+  
+  return norm;
+}
+
+template <class XX> void matdiff(int nrows, int ncols, XX **input1, XX **input2, XX **output){
+
+  // output = input1 - input2
+  
+  assert(nrows>0); assert(ncols>0);
+
+  for (int irow = 0; irow < nrows ; irow++){
+    for (int icol = 0; icol < ncols; icol++){
+      output[irow][icol] = input1[irow][icol] - input2[irow][icol];
+    }
+  }
+  
+}
+
+
+template <class XX>  void get_column(int colid, int nrows, int ncols, XX** mat, XX* outvec){
+
+  assert(nrows>0); assert(ncols>0);
+  
+  for (int irow = 0; irow < nrows; irow++){
+    outvec[irow] = mat[irow][colid];
+  }
+}
+
+
+template <class XX> int read_numpy(string filename,int nrows,int ncols, XX** matrix){
+  // https://cplusplus.com/doc/tutorial/files/
+
+  assert(nrows>0); assert(ncols>0);
+  
+  ifstream infile;
+  infile.open(filename,ios::in|ios::binary);
+
+  if (infile.is_open()){
+    for (int irow = 0; irow < nrows ; irow++){
+      for (int icol = 0; icol < ncols; icol++){
+	double temp  = 0.0;
+	infile.read((char *) &temp, sizeof(XX));
+	matrix[irow][icol] = temp;
+	//cout<<temp<<" " <<sizeof(double)<<endl;
+      }//icol
+    }//irow
+  }
+	     
+  infile.close();
+  return 0;
+}
+
+template <class XX> int write_numpy(string filename, int nrows, int ncols, XX** matrix){
+  // https://cplusplus.com/doc/tutorial/files/
+
+  assert(nrows>0); assert(ncols>0);
+  
+  ofstream outfile;
+  outfile.open(filename, ios::out|ios::binary);
+
+  if (outfile.is_open()){
+    for (int irow = 0; irow < nrows ; irow++){
+      for (int icol = 0; icol < ncols; icol++){
+	outfile.write( (char *)(&matrix[irow][icol]),sizeof(double));
+      }
+    }
+  }
+
+  outfile.close();
+  return 0;
+}
+
+
 
